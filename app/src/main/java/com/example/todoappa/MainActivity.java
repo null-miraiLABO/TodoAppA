@@ -1,12 +1,15 @@
 package com.example.todoappa;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,9 +32,28 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_add_task:
                 Log.d((String) Tag,"Todo App 項目の追加");
+
+                final EditText taskEditText =new EditText(this);
+                AlertDialog dialog = new  AlertDialog.Builder(this)
+                        .setTitle("追加")
+                        .setMessage("何する？")
+                        .setView(taskEditText)
+                        .setPositiveButton("追加", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String task=String.valueOf(taskEditText.getText());
+                                Log.d((String) Tag,"追加された項目: "+task);
+                            }
+                        })
+                        //.setPositiveButton("追加",null)
+                        .setNegativeButton("キャンセル",null)
+                        .create();
+                dialog.show();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+
         }
     }
 
