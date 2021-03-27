@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.todoappa.db.TaskContract;
 import com.example.todoappa.db.TaskDbHelper;
@@ -49,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
         db.close();
         */
+
         updateUI();
     }
 
+    //db中身の処理
     private void updateUI(){
         ArrayList<String> taskList = new ArrayList<>();
         SQLiteDatabase db = mHelper.getReadableDatabase();
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    //メニュー
+    //項目の追加
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -121,8 +125,20 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
+    }
+
+    //タスクの消去
+    public void deleteTask(View view){
+        View patent=(View)view.getParent();
+        TextView taskTextView=(TextView) patent.findViewById(R.id.task_title);
+        String task=String.valueOf(taskTextView.getText());
+        SQLiteDatabase db=mHelper.getWritableDatabase();
+        db.delete(TaskContract.TaskEntry.TABLE,
+                TaskContract.TaskEntry.COL_TASK_TITLE+" = ?",
+                new String[]{task});
+        db.close();
+        updateUI();
     }
 
 }
